@@ -1,0 +1,20 @@
+{
+  "name": "chat-swift",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "start:dev": "nodemon app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.2",
+    "mongoose": "^6.2.0",
+    "multer": "^1.4.4",
+    "socket.io": "^4.4.1"
+  }
+}
