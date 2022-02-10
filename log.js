@@ -3,7 +3,8 @@ const router = express.Router();
 const bcrypt = require("bcrypt");
 const Users = require("./User");
 const multer = require("multer");
-
+const jwt = require('jsonwebtoken');
+require("dotenv").config();
 const upload = multer({
     limits: {
         fileSize: 1000000,
@@ -13,6 +14,8 @@ const upload = multer({
     }
 }).single('avatar');
 
+
+// SIGN-UP
 router.post("/sign-up",async(req,res)=>{
             let user = new Users({
                 username:req.body.username,
@@ -20,25 +23,39 @@ router.post("/sign-up",async(req,res)=>{
             });
             try{
                 const post = await user.save();
-                res.json({"success":true});
+                let token = jwt.sign({username: req.body.username},process.env.secret)
+                res.json({"sessionid":token,"error":"null"});
             }
             catch(e){
                 if(e.code!=11000){
                     let error1 = e.message.substring(e.message.indexOf(':')+1);
-                    res.json({"error":error1});
+                    res.json({"sessionid":"null","error":error1});
+                }
+                else{
+                    res.json({"sessionid":"null","error":"This Name Is Already Exist"});
                 }
             }
         });
+
+// GET IMAGE
 router.get("/image",async(req,res)=>{
       let get = await Users.find({});
     res.set('Content-Type','image/jpg');
     res.send(get[1].avatar);
 });
+
+// LOGIN
 router.post("/login",async(req,res)=>{
 let user = await Users.findOne({username:req.body.name});
-
+if(!user){
+    res.json({"error":"Bulunamdı"});
+}
+    else if(user.username == req.body.name||user.password == req.body.password){
+        res.json({"success":"Oldu"});
+    }
 });
 
+// UPLOAD IMAGE
 router.post("/upload-image",async(req,res)=>{
 upload(req,res,async(err)=>{
     if(err){
