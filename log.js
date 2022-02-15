@@ -24,7 +24,8 @@ router.post("/sign-up",async(req,res)=>{
             try{
                 const post = await user.save();
                 let token = jwt.sign({username: req.body.username},process.env.secret)
-                res.json({"sessionid":token,"error":"null"});
+                res.json({"sessionid":String(token),"error":"null"});
+                console.log("Gönderildi");
             }
             catch(e){
                 if(e.code!=11000){
@@ -48,10 +49,17 @@ router.get("/image",async(req,res)=>{
 router.post("/login",async(req,res)=>{
 let user = await Users.findOne({username:req.body.name});
 if(!user){
-    res.json({"error":"Bulunamdı"});
+    res.json({"error":"We Could Not Find The User You Typed","sessionid":"nul"});
 }
-    else if(user.username == req.body.name||user.password == req.body.password){
-        res.json({"success":"Oldu"});
+    else{
+        const ischeck = await bcyrpt.compare(req.body.password,user1.password);
+        if(!ischeck){
+            res.json({"error":"Your Password Is Wrong","sessionid":"null"});
+        }
+        else{
+            let token = jwt.sign({username: req.body.username},process.env.secret)
+            res.json({"sessionid":token,"error":"null"});
+        }
     }
 });
 

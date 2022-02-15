@@ -5,7 +5,7 @@ const Users = new schema({
         username:{
             type:String,
             unique:true,
-            required:[true,"Name Field Is Required"],
+            required:[true,"Username Field Is Required"],
             maxlength:[15,"You Can Not Enter A Name More Than 15 Character"]
         },
         password:{
