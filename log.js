@@ -24,16 +24,16 @@ router.post("/sign-up",async(req,res)=>{
             try{
                 const post = await user.save();
                 let token = jwt.sign({username: req.body.username},process.env.secret)
-                res.json({"sessionid":String(token),"error":"null"});
+                res.json([{"sessionid":String(token),"error":"null"}]);
                 console.log("Gönderildi");
             }
             catch(e){
                 if(e.code!=11000){
                     let error1 = e.message.substring(e.message.indexOf(':')+1);
-                    res.json({"sessionid":"null","error":error1});
+                    res.json([{"sessionid":"null","error":error1}]);
                 }
                 else{
-                    res.json({"sessionid":"null","error":"This Name Is Already Exist"});
+                    res.json([{"sessionid":"null","error":"This Name Is Already Exist"}]);
                 }
             }
         });
