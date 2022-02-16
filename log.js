@@ -49,16 +49,16 @@ router.get("/image",async(req,res)=>{
 router.post("/login",async(req,res)=>{
 let user = await Users.findOne({username:req.body.name});
 if(!user){
-    res.json({"error":"We Could Not Find The User You Typed","sessionid":"nul"});
+    res.json([{"sessionid":"nul","error":"We Could Not Find The User You Typed"}]);
 }
     else{
         const ischeck = await bcyrpt.compare(req.body.password,user1.password);
         if(!ischeck){
-            res.json({"error":"Your Password Is Wrong","sessionid":"null"});
+            res.json([{"sessionid":"null","error":"Your Password Is Wrong"}]);
         }
         else{
             let token = jwt.sign({username: req.body.username},process.env.secret)
-            res.json({"sessionid":token,"error":"null"});
+            res.json([{"sessionid":String(token),"error":"null"}]);
         }
     }
 });
