@@ -47,12 +47,12 @@ router.get("/image",async(req,res)=>{
 
 // LOGIN
 router.post("/login",async(req,res)=>{
-let user = await Users.findOne({username:req.body.name});
+let user = await Users.findOne({username:req.body.username});
 if(!user){
-    res.json([{"sessionid":"nul","error":"We Could Not Find The User You Typed"}]);
+    res.json([{"sessionid":"null","error":"We Could Not Find The User You Typed"}]);
 }
     else{
-        const ischeck = await bcyrpt.compare(req.body.password,user1.password);
+        const ischeck = await bcrypt.compare(req.body.password,user.password);
         if(!ischeck){
             res.json([{"sessionid":"null","error":"Your Password Is Wrong"}]);
         }
