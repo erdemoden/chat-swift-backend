@@ -39,8 +39,8 @@ router.post("/sign-up",async(req,res)=>{
         });
 
 // GET IMAGE
-router.get("/image",async(req,res)=>{
-    let get = await Users.find({username:req.body.username});
+router.get("/image/:user",async(req,res)=>{
+    let get = await Users.find({username:req.params.user});
     res.set('Content-Type','image/jpg');
     res.send(get[0].avatar);
 });
