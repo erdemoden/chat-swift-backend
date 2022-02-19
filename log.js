@@ -24,41 +24,41 @@ router.post("/sign-up",async(req,res)=>{
             try{
                 const post = await user.save();
                 let token = jwt.sign({username: req.body.username},process.env.secret)
-                res.json([{"sessionid":String(token),"error":"null"}]);
+                res.json([{"sessionid":String(token),"error":"null","name":req.body.username}]);
                 console.log("Gönderildi");
             }
             catch(e){
                 if(e.code!=11000){
                     let error1 = e.message.substring(e.message.indexOf(':')+1);
-                    res.json([{"sessionid":"null","error":error1}]);
+                    res.json([{"sessionid":"null","error":error1,"name":"null"}]);
                 }
                 else{
-                    res.json([{"sessionid":"null","error":"This Name Is Already Exist"}]);
+                    res.json([{"sessionid":"null","error":"This Name Is Already Exist","name":"null"}]);
                 }
             }
         });
 
 // GET IMAGE
 router.get("/image",async(req,res)=>{
-      let get = await Users.find({});
+    let get = await Users.find({username:req.body.username});
     res.set('Content-Type','image/jpg');
-    res.send(get[1].avatar);
+    res.send(get[0].avatar);
 });
 
 // LOGIN
 router.post("/login",async(req,res)=>{
 let user = await Users.findOne({username:req.body.username});
 if(!user){
-    res.json([{"sessionid":"null","error":"We Could Not Find The User You Typed"}]);
+    res.json([{"sessionid":"null","error":"We Could Not Find The User You Typed","name":"null"}]);
 }
     else{
         const ischeck = await bcrypt.compare(req.body.password,user.password);
         if(!ischeck){
-            res.json([{"sessionid":"null","error":"Your Password Is Wrong"}]);
+            res.json([{"sessionid":"null","error":"Your Password Is Wrong","name":"null"}]);
         }
         else{
             let token = jwt.sign({username: req.body.username},process.env.secret)
-            res.json([{"sessionid":String(token),"error":"null"}]);
+            res.json([{"sessionid":String(token),"error":"null","name":req.body.username}]);
         }
     }
 });
