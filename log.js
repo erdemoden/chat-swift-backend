@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const Users = require("./User");
 const multer = require("multer");
 const jwt = require('jsonwebtoken');
+const resolve = require('path').resolve;
 require("dotenv").config();
 const upload = multer({
     limits: {
@@ -41,8 +42,15 @@ router.post("/sign-up",async(req,res)=>{
 // GET IMAGE
 router.get("/image/:user",async(req,res)=>{
     let get = await Users.find({username:req.params.user});
+    if(get[0].avatar){
     res.set('Content-Type','image/jpg');
     res.send(get[0].avatar);
+    }
+    else{
+    res.set('Content-Type','image/jpg');
+    res.sendFile(__dirname+'/images/profile-pic.png');
+    //console.log(resolve('./images/profile-pic.png'))
+    }
 });
 
 // LOGIN
