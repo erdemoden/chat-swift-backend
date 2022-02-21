@@ -73,6 +73,7 @@ if(!user){
 
 // UPLOAD IMAGE
 router.post("/upload-image",async(req,res)=>{
+    console.log(req.body.name);
 upload(req,res,async(err)=>{
     if(err){
         console.log("error");
@@ -80,16 +81,17 @@ upload(req,res,async(err)=>{
     else{
         myavatar = Buffer.from(req.file.buffer,'base64');
         try{
-            let find = await Users.findByIdAndUpdate(req.body.id,{avatar:myavatar})
-            res.json({"success":true});
+           // let find = await Users.findByIdAndUpdate(req.body.name,{avatar:myavatar})
+            let find = await Users.updateOne(req.body.name,{avatar:myavatar});
+            res.json([{"error":"nil"}]);
         }
         catch(e){
             if(e.code!=11000){
                 let error1 = e.message.substring(e.message.indexOf(':')+1);
-                res.json({"error":error1});
+                res.json([{"error":error1}]);
             }
             else{
-                res.json({"error":"hata"});
+                res.json([{"error":"hata"}]);
             }
         }
     }
