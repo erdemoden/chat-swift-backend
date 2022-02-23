@@ -8,7 +8,7 @@ const resolve = require('path').resolve;
 require("dotenv").config();
 const upload = multer({
     limits: {
-        fileSize: 1000000,
+        fileSize: 1000000000,
         },
     fileFilter(req,file,callback){
         callback(undefined,true);
@@ -72,17 +72,18 @@ if(!user){
 });
 
 // UPLOAD IMAGE
-router.post("/upload-image",async(req,res)=>{
-    console.log(req.body.name);
+router.post("/upload-image/:user",async(req,res)=>{
+    console.log("merhaba");
 upload(req,res,async(err)=>{
     if(err){
-        console.log("error");
+        console.log("error"+" "+err);
     }
     else{
+        console.log(req.file);
         myavatar = Buffer.from(req.file.buffer,'base64');
         try{
            // let find = await Users.findByIdAndUpdate(req.body.name,{avatar:myavatar})
-            let find = await Users.updateOne(req.body.name,{avatar:myavatar});
+            let find = await Users.findOneAndUpdate({username:req.params.user},{avatar:myavatar});
             res.json([{"error":"nil"}]);
         }
         catch(e){
